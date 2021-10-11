@@ -15,13 +15,13 @@ tags:
   description: Users functions and operations about user
 - name: moderator
   description: Moderators functions
-- name: updateArticle
+- name: updatedArticle
   description: Operations about versions of article
 paths:  
-  /updateArticle/{ArticleId}:
-    put:
+  /updateArticle/{ArticleId}/{UserId}/{EditedBody}:
+    post:
       tags:
-      - updateArticle
+      - updatedArticle
       summary: Edit created article
       operationId: EditArticle
       parameters:
@@ -32,6 +32,19 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: UserId
+        in: path
+        description: User Id who edit article
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: EditedBody
+        in: path
+        description: New version of article
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: successful operation
@@ -41,9 +54,10 @@ paths:
           content: {}
       security:
       - ApiKeyAuth: []
+  /updateArticle/{ArticleId}:
     get:
       tags:
-      - updateArticle
+      - updatedArticle
       summary: Get versions of article
       parameters:
       - name: ArticleId
@@ -57,12 +71,12 @@ paths:
         200:
           description: successful operation
           content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Article'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Article'
+              applicationUpdatedArticle/xml:
+                schema:
+                  $ref: '#/components/schemas/UpdatedArticle'
+              applicationUpdatedArticle/json:
+                schema:
+                  $ref: '#/components/schemas/UpdatedArticle'
         404:
           description: Entered ID does not exist 
       security:
@@ -70,7 +84,7 @@ paths:
   /updateArticle/{ModeratorKey}/{ArticleId}/{ArticleVersion}:
     put:
       tags:
-      - updateArticle
+      - updatedArticle
       summary: Accept article
       parameters:
       - name: api_key
@@ -97,6 +111,21 @@ paths:
         schema:
           type: string
       responses:
+        200:
+          description:  Article succeful accepted 
+          content:
+            applicationsArticle/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+            applicationUser/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            applicationArticle/xml:
+               schema:
+                $ref: '#/components/schemas/Article'
+            applicationUser/xml:
+               schema:
+                $ref: '#/components/schemas/User'
         404:
           description: Entered ID does not exist
           content: {}
@@ -482,6 +511,26 @@ components:
         version:
           type: string
           example: 0.0.1
+    UpdatedArticle:
+      type: object
+      properties:
+        ArticleId:
+          type: integer
+          format: int64
+        UserId:
+          type: integer
+          format: int64
+        ArticleBody:
+          type: string
+        date:
+          type: string
+        state:
+          type: string
+          enum:
+            - rejected
+            - accepted
+            - under_consideration
+            - awaits_resolution
       xml:
         name: Article
   securitySchemes:
