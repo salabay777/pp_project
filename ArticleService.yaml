@@ -15,7 +15,96 @@ tags:
   description: Users functions and operations about user
 - name: moderator
   description: Moderators functions
+- name: updateArticle
+  description: Operations about versions of article
 paths:  
+  /updateArticle/{ArticleId}:
+    put:
+      tags:
+      - updateArticle
+      summary: Edit created article
+      operationId: EditArticle
+      parameters:
+      - name: ArticleId
+        in: path
+        description: ID of Article to found
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        404:
+          description: Entered ID does not exist
+          content: {}
+      security:
+      - ApiKeyAuth: []
+    get:
+      tags:
+      - updateArticle
+      summary: Get versions of article
+      parameters:
+      - name: ArticleId
+        in: path
+        description: ID of Article to found
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Article'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        404:
+          description: Entered ID does not exist 
+      security:
+      - ApiKeyAuth: [] 
+  /updateArticle/{ModeratorKey}/{ArticleId}/{ArticleVersion}:
+    put:
+      tags:
+      - updateArticle
+      summary: Accept article
+      parameters:
+      - name: api_key
+        in: header
+        schema:
+          type: string
+      - name: ArticleId
+        in: path
+        description: Article ID to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: ModeratorKey
+        in: path
+        description: Moderators key for accept or delete article
+        required: true
+        schema:
+          type: string
+      - name: ArticleVersion
+        in: path
+        description: Article version to accept
+        required: true
+        schema:
+          type: string
+      responses:
+        404:
+          description: Entered ID does not exist
+          content: {}
+        403:
+          description: Invalid moderator key 
+          content: {}
+      security:
+      - ApiKeyAuth: []
   /article:
     post:
       tags:
@@ -45,28 +134,6 @@ paths:
       - ApiKeyAuth: []
       x-codegen-request-body-name: body
   /article/{ArticleId}:
-    put:
-      tags:
-      - article
-      summary: Edit created article
-      operationId: EditArticle
-      parameters:
-      - name: ArticleId
-        in: path
-        description: ID of Article to found
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        200:
-          description: successful operation
-          content: {}
-        404:
-          description: Entered ID does not exist
-          content: {}
-      security:
-      - ApiKeyAuth: []
     get:
       tags:
       - article
@@ -91,45 +158,12 @@ paths:
                 $ref: '#/components/schemas/Article'
         404:
           description: Entered ID does not exist 
-      security:
-      - ApiKeyAuth: [] 
   /article/{ModeratorKey}/{ArticleId}:
     delete:
       tags:
       - article
       summary: Delete a Article
       operationId: deleteArticle
-      parameters:
-      - name: api_key
-        in: header
-        schema:
-          type: string
-      - name: ArticleId
-        in: path
-        description: Article ID to delete
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: ModeratorKey
-        in: path
-        description: Moderators key for accept or delete article
-        required: true
-        schema:
-          type: string
-      responses:
-        404:
-          description: Entered ID does not exist
-          content: {}
-        403:
-          description: Invalid moderator key 
-          content: {}
-      security:
-      - ApiKeyAuth: []
-    put:
-      tags:
-      - article
-      summary: Accept article
       parameters:
       - name: api_key
         in: header
@@ -261,7 +295,6 @@ paths:
           content: {}
       security:
       - ApiKeyAuth: []
-  /user/{userName}:
     delete:
       tags:
       - user
@@ -269,7 +302,7 @@ paths:
       description: This can only be done by the logged in user
       operationId: deleteUser
       parameters:
-      - name: userName
+      - name: userId
         in: path
         description: The name that needs to be deleted
         required: true
@@ -310,6 +343,8 @@ paths:
           description: successful operation
           content: {}
       x-codegen-request-body-name: body
+      security:
+      - ApiKeyAuth: []
   /moderator/login/{ModeratorKey}:
     get:
       tags:
@@ -359,6 +394,8 @@ paths:
         400:
           description: Invalid username/password supplied
           content: {}
+      security:
+      - ApiKeyAuth: []
   /moderator/logout/{ModeratorKey}:
     get:
       tags:
@@ -376,6 +413,8 @@ paths:
         default:
           description: successful operation
           content: {}
+      security:
+      - ApiKeyAuth: []
 components:
   schemas:
     Moderator:
@@ -440,6 +479,9 @@ components:
         body:
           type: string
           example: Something about the theory of relativity
+        version:
+          type: string
+          example: 0.0.1
       xml:
         name: Article
   securitySchemes:
