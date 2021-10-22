@@ -7,7 +7,7 @@ moderator = Moderator(moderator_id = 1, moderatorname = "Admin", firstname = "Te
 article = Article(article_id = 1, name = "For school", body = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.", version = 1)
 article2 = Article(article_id = 2, name = "For school2", body = "Lorem ipвфівфівіфdфadssum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.", version = 1)
 state = State(state_id = 1, name = "Approved")
-updated_article = UpdatedArticle(updated_article_id = 1, article_id = 1, user_id = 1, moderator_id = 1, state_id = 1, article_body = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.")
+updated_article = UpdatedArticle(updated_article_id = 1, article_id = 1, user_id = 1, moderator_id = 1, state_id = 1, article_body = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.", date = "2021-07-10")
 
 session.add(user)
 
