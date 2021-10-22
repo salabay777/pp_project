@@ -1,8 +1,18 @@
+import os
+
 from sqlalchemy import Integer, String, Column, Date, ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine, orm
+from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
+DB_URL = os.getenv("DB_URL", "mysql+pymysql://root:12345678@127.0.0.1:3306/forppproject")
+
+engine = create_engine(DB_URL)
+
+SessionFactory = sessionmaker(bind=engine)
+
+Session = scoped_session(SessionFactory)
 
 Base = declarative_base()
 metadata = Base.metadata
