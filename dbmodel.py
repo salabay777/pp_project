@@ -3,10 +3,10 @@ import os
 from sqlalchemy import Integer, String, Column, Date, ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, orm
+from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
-DB_URL = os.getenv("DB_URL", "mysql+pymysql://root:12345678@127.0.0.1:3306/forppproject")
+DB_URL = os.getenv("DB_URL", "mysql+pymysql://name_of_user:pass@localhost:3306/name_of_schema")
 
 engine = create_engine(DB_URL)
 
