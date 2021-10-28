@@ -1,4 +1,3 @@
-
 openapi: 3.0.0
 info:
   title: Сервіс Статей
@@ -15,54 +14,146 @@ tags:
   description: Users functions and operations about user
 - name: moderator
   description: Moderators functions
-- name: updateArticle
+- name: updatedArticle
   description: Operations about versions of article
+- name: state
+  description: Operations about state
 paths:  
-  /updateArticle/{ArticleId}/{UserId}/{EditedBody}:
+  /updateArticle:
     post:
       tags:
-      - updateArticle
+      - updatedArticle
       summary: Edit created article
       operationId: EditArticle
-      parameters:
-      - name: ArticleId
-        in: path
-        description: ID of Article to found
+      requestBody:
+        description: Create a new article
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Article'
         required: true
-        schema:
-          type: integer
-          format: int64
-      - name: UserId
-        in: path
-        description: User Id who edit article
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: EditedBody
-        in: path
-        description: New version of article
-        required: true
-        schema:
-          type: string
       responses:
         200:
           description: successful operation
           content: {}
-        404:
-          description: Entered ID does not exist
+        400:
+          description: Article body wasn't defined right
           content: {}
+      security:
+      - ApiKeyAuth: []
+    put:
+      tags:
+      - updatedArticle
+      summary: Accept article
+      parameters:
+      - name: ArticleId
+        in: query
+        description: Article ID to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: ModeratorKey
+        in: query
+        description: Moderators key for accept or delete article
+        required: true
+        schema:
+          type: string
+      - name: Date
+        in: query
+        description: Date update of article
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        200:
+          description:  Article succeful accepted 
+          content:
+            applicationsArticle/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedArticle'
+            applicationArticle/xml:
+               schema:
+                $ref: '#/components/schemas/UpdatedArticle'
+        404:
+          description: Entered ArticleID does not exist
+          content: {}
+        400:
+          description: Invalid moderator key 
+          content: {}
+        402:
+          description: A bad date was supplied
       security:
       - ApiKeyAuth: []
   /updateArticle/{ArticleId}:
     get:
       tags:
-      - updateArticle
+      - updatedArticle
       summary: Get versions of article
       parameters:
       - name: ArticleId
         in: path
         description: ID of Article to found
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+              applicationUpdatedArticle/xml:
+                schema:
+                  $ref: '#/components/schemas/UpdatedArticle'
+              applicationUpdatedArticle/json:
+                schema:
+                  $ref: '#/components/schemas/UpdatedArticle'
+        400:
+          description: Invalid ArticleId supplied
+        404:
+          description: A articles versions with provided ID was not found
+      security:
+      - ApiKeyAuth: [] 
+  /state:
+    post:
+      tags:
+      - state
+      summary: Add a new state
+      operationId: addState
+      requestBody:
+        description: Create a new state
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/State'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/State'
+        required: true
+      responses:
+        200:
+          description: state was successfully added
+        400:
+          description: state with such name already exists
+        404:
+          description: Body wasn't defined
+          content: {}
+      security:
+      - ApiKeyAuth: []
+      x-codegen-request-body-name: body
+  /state/{StateId}:
+    get:
+      tags:
+      - state
+      summary: Get state
+      parameters:
+      - name: StateId
+        in: path
+        description: ID of State to found
         required: true
         schema:
           type: integer
@@ -77,61 +168,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
+        400:
+          description: Invalid stateId supplied
         404:
-          description: Entered ID does not exist 
-      security:
-      - ApiKeyAuth: [] 
-  /updateArticle/{ModeratorKey}/{ArticleId}/{ArticleVersion}:
-    put:
+          description: A state with provided ID was not found
+    delete:
       tags:
-      - updateArticle
-      summary: Accept article
+      - state
+      summary: Delete a State
+      operationId: deleteState
       parameters:
-      - name: api_key
-        in: header
-        schema:
-          type: string
-      - name: ArticleId
+      - name: StateId
         in: path
-        description: Article ID to delete
+        description: State ID to delete
         required: true
         schema:
           type: integer
           format: int64
-      - name: ModeratorKey
-        in: path
-        description: Moderators key for accept or delete article
-        required: true
-        schema:
-          type: string
-      - name: ArticleVersion
-        in: path
-        description: Article version to accept
-        required: true
-        schema:
-          type: string
       responses:
         200:
-          description:  Article succeful accepted 
-          content:
-            applications/json:
-              schema:
-                $ref: '#/components/schemas/Article'
-            applicationUser/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
-               schema:
-                $ref: '#/components/schemas/Article'
-            applicationUser/xml:
-               schema:
-                $ref: '#/components/schemas/User'
+          description: state was successfully deleted
+        400:
+          description: Invalid stateId supplied
         404:
-          description: Entered ID does not exist
-          content: {}
-        403:
-          description: Invalid moderator key 
-          content: {}
+          description: A state with provided ID was not found
       security:
       - ApiKeyAuth: []
   /article:
@@ -151,17 +211,14 @@ paths:
               $ref: '#/components/schemas/Article'
         required: true
       responses:
-        405:
-          description: Name wasn't defined
-          content: {}
-        406:
-          description: Body wasn't defined
-          content: {}
-        403:
+        200:
+          description: article was successfully added
+        400:
+          description: Body wasn't defined right
+        404:
           description: Selected ID is already in use
       security:
       - ApiKeyAuth: []
-      x-codegen-request-body-name: body
   /article/{ArticleId}:
     get:
       tags:
@@ -186,18 +243,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Article'
         404:
-          description: Entered ID does not exist 
-  /article/{ModeratorKey}/{ArticleId}:
+          description: A article with provided ID was not found
+        400:
+          description: Entered ID does not right 
     delete:
       tags:
       - article
       summary: Delete a Article
       operationId: deleteArticle
       parameters:
-      - name: api_key
-        in: header
-        schema:
-          type: string
       - name: ArticleId
         in: path
         description: Article ID to delete
@@ -205,18 +259,14 @@ paths:
         schema:
           type: integer
           format: int64
-      - name: ModeratorKey
-        in: path
-        description: Moderators key for accept or delete article
-        required: true
-        schema:
-          type: string
       responses:
-        404:
-          description: Entered ID does not exist
+        200:
+          description: article was successfully deleted
+        400:
+          description: Invalid articleId supplied
           content: {}
-        403:
-          description: Invalid moderator key 
+        404:
+          description: A article with provided ID was not found
           content: {}
       security:
       - ApiKeyAuth: []
@@ -228,17 +278,22 @@ paths:
       description: This can only be done by the unlogged in user
       operationId: createUser
       requestBody:
-        description: Created user object
+        description: Create a new user
         content:
-          multipart/form-data:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
             schema:
               $ref: '#/components/schemas/User'
         required: true
       responses:
-        default:
+        200:
           description: successful operation
-          content: {}
-      x-codegen-request-body-name: body
+        400:
+          description: body wasn't defined right
+        404:
+          description: user with such username already exists
   /user/login:
     get:
       tags:
@@ -301,7 +356,6 @@ paths:
       parameters:
       - name: userId
         in: path
-        description: 'The name that needs to be fetched. Use user1 for testing. '
         required: true
         schema:
           type: integer
@@ -317,7 +371,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Invalid username supplied
+          description: Invalid userId supplied
           content: {}
         404:
           description: User not found
@@ -333,44 +387,43 @@ paths:
       parameters:
       - name: userId
         in: path
-        description: The name that needs to be deleted
         required: true
         schema:
           type: string
       responses:
+        200:
+          description: User was successfully deleted
         400:
-          description: Invalid username supplied
-          content: {}
+          description: Invalid userID supplied
         404:
           description: User not found
-          content: {}
       security:
       - ApiKeyAuth: [] 
-  /moderator/{ModeratorKey}:
+  /moderator:
     post:
       tags:
       - moderator
       summary: Create moderator
       description: This can only be done by the logged in user.
       operationId: createModerator
-      parameters:
-      - name: ModeratorKey
-        in: path
-        description: Moderators key for accept or delete article
-        required: true
-        schema:
-          type: string
       requestBody:
-        description: Created user object
+        description: Create a new user
         content:
-          multipart/form-data:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Moderator'
+          application/xml:
             schema:
               $ref: '#/components/schemas/Moderator'
         required: true
       responses:
-        default:
+        200:
           description: successful operation
           content: {}
+        404:
+          description: Moderator with such moderatorname already exists
+        400:
+          description: Body wasn't defined right
       x-codegen-request-body-name: body
       security:
       - ApiKeyAuth: []
@@ -472,6 +525,16 @@ components:
           example: D9YH63Lk3Vx7drr
       xml:
         name: Moderator
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: Moderator
     User:
       type: object
       properties:
@@ -511,6 +574,21 @@ components:
         version:
           type: string
           example: 0.0.1
+    UpdatedArticle:
+      type: object
+      properties:
+        ArticleId:
+          type: integer
+          format: int64
+        UserId:
+          type: integer
+          format: int64
+        ArticleBody:
+          type: string
+        date:
+          type: string
+        state:
+          type: string
       xml:
         name: Article
   securitySchemes:
