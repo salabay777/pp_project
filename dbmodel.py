@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
-DB_URL = os.getenv("DB_URL", "mysql+pymysql://name_of_user:pass@localhost:3306/name_of_schema")
+DB_URL = os.getenv("DB_URL", "mysql+pymysql://root:root@localhost:3306/dbsalabay")
 
 engine = create_engine(DB_URL)
 
@@ -62,6 +62,7 @@ class UpdatedArticle(Base):
     state_id = Column(Integer, ForeignKey('state.state_id'))
     article_body = Column(String(8000))
     date = Column(Date)
+    status = Column(String(80))
     article = relationship("Article")
     user = relationship("User")
     moderator = relationship("Moderator")

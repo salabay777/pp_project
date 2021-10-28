@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 waitress = "*"
+flask-bcrypt = "*"
+cryptography = "*"
 
 [dev-packages]
 
