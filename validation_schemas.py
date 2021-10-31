@@ -28,10 +28,11 @@ class StateSchema(Schema):
     name = fields.String(required=True, validate=Length(min=3))
 
 class UpdatedArticleSchema(Schema):
+    # updated_article_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
     article_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
     user_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
     moderator_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
     state_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
     article_body = fields.String(required=True, validate=Length(min=6))
     date = fields.Date(required=True)
-    status = fields.String(required=True)
+    # status = fields.String(required=True)

@@ -54,7 +54,7 @@ def get_user(articleId):
 @article.route('/api/v1/article/<articleId>', methods=['DELETE'])
 def delete_user(articleId):
     # Check if supplied userId correct
-    if article<1:
+    if int(articleId)<1:
         return Response(status=400, response='Invalid articleId supplied')
 
     # Check if user exists
