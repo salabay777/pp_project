@@ -41,7 +41,7 @@ def registerUser():
 @user.route('/api/v1/user/<userId>', methods=['GET'])
 def get_user(userId):
     # Check if supplied userId correct
-    if userId<1:
+    if int(userId)<1:
         return Response(status=400, response='Invalid userID supplied')
     # Check if user exists
     db_user = session.query(User).filter_by(user_id=userId).first()
