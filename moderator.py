@@ -1,6 +1,7 @@
 from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
+from flask_httpauth import HTTPBasicAuth
 from dbmodel import User, Moderator, Session
 from validation_schemas import UserSchema, ModeratorSchema
 
@@ -8,8 +9,20 @@ moderator = Blueprint('moderator', __name__)
 bcrypt = Bcrypt()
 
 session = Session()
+auth = HTTPBasicAuth()
+
+
+@auth.verify_password
+def verify_password(username, password):
+    try:
+        user = session.query(User).filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            return username
+    except:
+        return None
 
 @moderator.route('/api/v1/moderator', methods=['POST'])
+@auth.login_required
 def registerModerator():
     # Get data from request body
     data = request.get_json()

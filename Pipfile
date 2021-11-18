@@ -8,6 +8,12 @@ flask = "*"
 waitress = "*"
 flask-bcrypt = "*"
 cryptography = "*"
+bcrypt = "*"
+marshmallow = "*"
+sqlalchemy = "*"
+pymysql = "*"
+alembic = "*"
+flask-httpauth = "*"
 
 [dev-packages]
 

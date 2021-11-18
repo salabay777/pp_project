@@ -2,15 +2,29 @@ from os import stat_result
 from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
-from dbmodel import State, Session
+from flask_httpauth import HTTPBasicAuth
+from dbmodel import State, Session, User
 from validation_schemas import StateSchema
 
 state = Blueprint('state', __name__)
 bcrypt = Bcrypt()
 
 session = Session()
+auth = HTTPBasicAuth()
+
+
+@auth.verify_password
+def verify_password(username, password):
+    try:
+        user = session.query(User).filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            return username
+    except:
+        return None
+
 
 @state.route('/api/v1/state', methods=['POST'])
+@auth.login_required
 def create_state():
     # Get data from request body
     data = request.get_json()
@@ -35,11 +49,12 @@ def create_state():
 
     return Response(response='New state was successfully created!')
 
+
 # Get article by id
 @state.route('/api/v1/state/<stateId>', methods=['GET'])
 def get_state(stateId):
     # Check if supplied userId correct
-    if int(stateId)<1:
+    if int(stateId) < 1:
         return Response(status=400, response='Invalid stateId supplied')
     # Check if user exists
     db_user = session.query(State).filter_by(state_id=stateId).first()
@@ -53,9 +68,10 @@ def get_state(stateId):
 
 # Delete article by id
 @state.route('/api/v1/state/<stateId>', methods=['DELETE'])
+@auth.login_required
 def delete_state(stateId):
     # Check if supplied userId correct
-    if int(stateId)<1:
+    if int(stateId) < 1:
         return Response(status=400, response='Invalid stateId supplied')
 
     # Check if user exists
