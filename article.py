@@ -1,15 +1,28 @@
 from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
-from dbmodel import Article, Session
+from flask_httpauth import HTTPBasicAuth
+from dbmodel import Article, Session, User
 from validation_schemas import ArticleSchema
 
 article = Blueprint('article', __name__)
 bcrypt = Bcrypt()
 
 session = Session()
+auth = HTTPBasicAuth()
+
+
+@auth.verify_password
+def verify_password(username, password):
+    try:
+        user = session.query(User).filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            return username
+    except:
+        return None
 
 @article.route('/api/v1/article', methods=['POST'])
+@auth.login_required
 def create_article():
     # Get data from request body
     data = request.get_json()
@@ -52,6 +65,7 @@ def get_user(articleId):
 
 # Delete article by id
 @article.route('/api/v1/article/<articleId>', methods=['DELETE'])
+@auth.login_required
 def delete_user(articleId):
     # Check if supplied userId correct
     if int(articleId)<1:
