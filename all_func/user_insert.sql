@@ -1,0 +1,1 @@
+insert into user values(2, 'user', 'Francic', 'Underwood', 'user@email.com', '$2b$12$Js/c5DqiUHERKnNENPj71OuSEZPaQgl8bXAqdVG3SRdMHFXKp8816');

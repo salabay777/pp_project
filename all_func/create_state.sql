@@ -1,0 +1,1 @@
+insert into state values(1,'About math');

@@ -11,6 +11,7 @@ class UserSchema(Schema):
 
 
 class ModeratorSchema(Schema):
+    moderator_id = fields.Integer(required=True)
     moderatorname = fields.String(required=True, validate=Length(min=3))
     firstname = fields.String(required=True, validate=Length(min=3))
     lastname = fields.String(required=True, validate=Length(min=3))
@@ -20,19 +21,21 @@ class ModeratorSchema(Schema):
 
 
 class ArticleSchema(Schema):
+    article_id = fields.Integer(required=True)
     name = fields.String(required=True, validate=Length(min=3))
     body = fields.String(required=True, validate=Length(min=6))
     version = fields.String(required=True, validate=Length(min=6))
 
 class StateSchema(Schema):
+    state_id = fields.Integer(required=True)
     name = fields.String(required=True, validate=Length(min=3))
 
 class UpdatedArticleSchema(Schema):
-    # updated_article_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
-    article_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
-    user_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
-    moderator_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
-    state_id = fields.Integer(strict=True, required=True, validate=Range(min=0))
-    article_body = fields.String(required=True, validate=Length(min=6))
-    date = fields.Date(required=True)
+    updated_article_id = fields.Integer( required=True, validate=Range(min=0))
+    article_id = fields.Integer(required=True, validate=Range(min=0))
+    user_id = fields.Integer(required=True, validate=Range(min=0))
+    moderator_id = fields.Integer(required=True, validate=Range(min=0))
+    state_id = fields.Integer(required=True, validate=Range(min=0))
+    article_body = fields.String(validate=Length(min=6))
+    date = fields.String(required=True)
     # status = fields.String(required=True)

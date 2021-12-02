@@ -2,8 +2,8 @@ from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
-from dbmodel import Article, Session, User
-from validation_schemas import ArticleSchema
+from all_func.dbmodel import Article, Session, User
+from all_func.validation_schemas import ArticleSchema
 
 article = Blueprint('article', __name__)
 bcrypt = Bcrypt()
@@ -39,7 +39,7 @@ def create_article():
         return Response(status=404, response='article with such number already exists.')
 
     # Create new article
-    new_article = Article(name=data['name'], body=data['body'], version=data['version'])
+    new_article = Article(article_id= data["article_id"],name=data['name'], body=data['body'], version=data['version'])
 
     # Add new article to db
     session.add(new_article)
@@ -49,7 +49,7 @@ def create_article():
 
 # Get article by id
 @article.route('/api/v1/article/<articleId>', methods=['GET'])
-def get_user(articleId):
+def get_article(articleId):
     # Check if supplied userId correct
     if int(articleId)<1:
         return Response(status=400, response='Invalid articleId supplied')
@@ -60,13 +60,13 @@ def get_user(articleId):
 
     # Return user data
     user_data = {'article_id': db_user.article_id, 'name': db_user.name, 'body': db_user.body, 'version': db_user.version}
-    return jsonify({"user": user_data})
+    return jsonify(user_data), 200
 
 
 # Delete article by id
 @article.route('/api/v1/article/<articleId>', methods=['DELETE'])
 @auth.login_required
-def delete_user(articleId):
+def delete_article(articleId):
     # Check if supplied userId correct
     if int(articleId)<1:
         return Response(status=400, response='Invalid articleId supplied')

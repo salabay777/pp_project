@@ -3,8 +3,8 @@ from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
-from dbmodel import State, Session, User
-from validation_schemas import StateSchema
+from all_func.dbmodel import State, Session, User
+from all_func.validation_schemas import StateSchema
 
 state = Blueprint('state', __name__)
 bcrypt = Bcrypt()
@@ -41,13 +41,13 @@ def create_state():
         return Response(status=404, response='state with such name already exists')
 
     # Create new article
-    new_state = State(name=data['name'])
+    new_state = State(state_id = data["state_id"], name=data['name'])
 
     # Add new article to db
     session.add(new_state)
     session.commit()
 
-    return Response(response='New state was successfully created!')
+    return Response(status=200, response='New state was successfully created!')
 
 
 # Get article by id
@@ -63,7 +63,7 @@ def get_state(stateId):
 
     # Return user data
     state_data = {'state_id': db_user.state_id, 'name': db_user.name}
-    return jsonify({"state": state_data})
+    return jsonify(state_data), 200
 
 
 # Delete article by id
@@ -82,4 +82,4 @@ def delete_state(stateId):
     # Delete user
     session.delete(db_user)
     session.commit()
-    return Response(response='state was deleted')
+    return Response(status=200,response='state was deleted')

@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
-DB_URL = os.getenv("DB_URL", "mysql+pymysql://root:pass@localhost:3306/lab8_pp")
+DB_URL = os.getenv("DB_URL", "mysql+pymysql://root:EL_PRESIDENTO@localhost:3306/lb9")
 
 engine = create_engine(DB_URL)
 

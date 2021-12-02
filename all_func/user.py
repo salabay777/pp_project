@@ -2,8 +2,8 @@ from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
-from dbmodel import User, Session
-from validation_schemas import UserSchema
+from all_func.dbmodel import User, Session
+from all_func.validation_schemas import UserSchema
 
 user = Blueprint('user', __name__)
 bcrypt = Bcrypt()
@@ -56,8 +56,6 @@ def registerUser():
 @user.route('/api/v1/user/<userId>', methods=['GET'])
 @auth.login_required
 def get_user(userId):
-    if auth.username() != session.query(User).filter_by(user_id=userId).first().username:
-        return Response(status=406, response='Access denied')
 
     # Check if supplied userId correct
     if int(userId) < 1:
@@ -70,15 +68,15 @@ def get_user(userId):
     # Return user data
     user_data = {'user_id': db_user.user_id, 'username': db_user.username, 'firstname': db_user.firstname,
                  'lastname': db_user.lastname, 'email': db_user.email, 'password': db_user.password}
-    return jsonify({"user": user_data})
+    return jsonify( user_data), 200
 
 
 # Delete user by id
 @user.route('/api/v1/user/<userId>', methods=['DELETE'])
 @auth.login_required
 def delete_user(userId):
-    if auth.username() != session.query(User).filter_by(user_id=userId).first().username:
-        return Response(status=406, response='Access denied')
+    # if auth.username() != session.query(User).filter_by(user_id=userId).first().username:
+    #     return Response(status=500, response='Access denied')
 
     # Check if supplied userId correct
     if int(userId) < 1:
@@ -92,4 +90,4 @@ def delete_user(userId):
     # Delete user
     session.delete(db_user)
     session.commit()
-    return Response(response='User was deleted.')
+    return Response(status=200, response='User was deleted.')

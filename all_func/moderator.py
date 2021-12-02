@@ -2,8 +2,8 @@ from flask import Blueprint, Response, request, jsonify
 from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from flask_httpauth import HTTPBasicAuth
-from dbmodel import User, Moderator, Session
-from validation_schemas import UserSchema, ModeratorSchema
+from  all_func.dbmodel import User, Moderator, Session
+from all_func.validation_schemas import UserSchema, ModeratorSchema
 
 moderator = Blueprint('moderator', __name__)
 bcrypt = Bcrypt()
@@ -15,7 +15,7 @@ auth = HTTPBasicAuth()
 @auth.verify_password
 def verify_password(username, password):
     try:
-        user = session.query(User).filter_by(username=username).first()
+        user = session.query(Moderator).filter_by(moderatorname=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             return username
     except:
@@ -41,7 +41,7 @@ def registerModerator():
     # Hash user's password
     hashed_password = bcrypt.generate_password_hash(data['password'])
     # Create new user
-    new_moderator = Moderator(moderatorname=data['moderatorname'], firstname=data['firstname'], lastname=data['lastname'], email=data['email'], password=hashed_password, moderatorkey=data['moderatorkey'])
+    new_moderator = Moderator(moderator_id = data['moderator_id'], moderatorname=data['moderatorname'], firstname=data['firstname'], lastname=data['lastname'], email=data['email'], password=hashed_password, moderatorkey=data['moderatorkey'])
 
     # Add new user to db
     session.add(new_moderator)

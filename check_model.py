@@ -1,4 +1,4 @@
-from dbmodel import Session, User, Moderator, Article, State, UpdatedArticle
+from all_func.dbmodel import Session, User, Moderator, Article, State, UpdatedArticle
 
 session = Session()
 
