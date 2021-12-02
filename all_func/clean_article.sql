@@ -1,0 +1,1 @@
+insert into article values(2,'Cars','Smth about car','0.0.0.1');

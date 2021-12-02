@@ -2,12 +2,11 @@ __version__ = '0.1.0'
 from flask import Flask, Response
 from waitress import serve
 
-from moderator import moderator
-from user import user
-from state import state
-# from mod import moderator
-from article import article
-from updatedArticle import updatedArticle
+from  all_func.moderator import moderator
+from  all_func.user import user
+from  all_func.state import state
+from  all_func.article import article
+from  all_func.updatedArticle import updatedArticle
 
 app = Flask(__name__)
 app.register_blueprint(state)
@@ -19,8 +18,7 @@ app.register_blueprint(updatedArticle)
 
 @app.route('/api/v1/hello-world-5')
 def myendpoint():
-    status_code = Response(response="Hello World 5")
-    return status_code
+    return   Response(status=200, response="Hello World 5")
 
 # session = Session()
 # @app.route('/api/v1/article', methods=['POST'])
