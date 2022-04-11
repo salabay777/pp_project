@@ -12,148 +12,47 @@ tags:
   description: Operations about articles
 - name: user
   description: Users functions and operations about user
-- name: moderator
-  description: Moderators functions
-- name: updatedArticle
-  description: Operations about versions of article
-- name: state
-  description: Operations about state
-paths:  
-  /updateArticle:
+- name: role
+  description: Operations about roles of users
+- name: status
+  description: Operations about status
+paths:
+  /status:
     post:
       tags:
-      - updatedArticle
-      summary: Edit created article
-      operationId: EditArticle
+      - status
+      summary: Add a new status
+      operationId: addStatus
       requestBody:
-        description: Create a new article
+        description: Create a new status
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Article'
+              $ref: '#/components/schemas/Status'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Article'
+              $ref: '#/components/schemas/Status'
         required: true
       responses:
         200:
-          description: successful operation
-          content: {}
+          description: status was successfully added
         400:
-          description: Article body wasn't defined right
-          content: {}
-      security:
-      - ApiKeyAuth: []
-    put:
-      tags:
-      - updatedArticle
-      summary: Accept article
-      parameters:
-      - name: ArticleId
-        in: query
-        description: Article ID to delete
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: ModeratorKey
-        in: query
-        description: Moderators key for accept or delete article
-        required: true
-        schema:
-          type: string
-      - name: Date
-        in: query
-        description: Date update of article
-        required: true
-        schema:
-          type: string
-          format: date
-      responses:
-        200:
-          description:  Article succeful accepted 
-          content:
-            applicationsArticle/json:
-              schema:
-                $ref: '#/components/schemas/UpdatedArticle'
-            applicationArticle/xml:
-               schema:
-                $ref: '#/components/schemas/UpdatedArticle'
-        404:
-          description: Entered ArticleID does not exist
-          content: {}
-        400:
-          description: Invalid moderator key 
-          content: {}
-        402:
-          description: A bad date was supplied
-      security:
-      - ApiKeyAuth: []
-  /updateArticle/{ArticleId}:
-    get:
-      tags:
-      - updatedArticle
-      summary: Get versions of article
-      parameters:
-      - name: ArticleId
-        in: path
-        description: ID of Article to found
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        200:
-          description: successful operation
-          content:
-              applicationUpdatedArticle/xml:
-                schema:
-                  $ref: '#/components/schemas/UpdatedArticle'
-              applicationUpdatedArticle/json:
-                schema:
-                  $ref: '#/components/schemas/UpdatedArticle'
-        400:
-          description: Invalid ArticleId supplied
-        404:
-          description: A articles versions with provided ID was not found
-      security:
-      - ApiKeyAuth: [] 
-  /state:
-    post:
-      tags:
-      - state
-      summary: Add a new state
-      operationId: addState
-      requestBody:
-        description: Create a new state
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/State'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/State'
-        required: true
-      responses:
-        200:
-          description: state was successfully added
-        400:
-          description: state with such name already exists
+          description: status with such name already exists
         404:
           description: Body wasn't defined
           content: {}
       security:
       - ApiKeyAuth: []
       x-codegen-request-body-name: body
-  /state/{StateId}:
+  /status/{StatusId}:
     get:
       tags:
-      - state
-      summary: Get state
+      - status
+      summary: Get status
       parameters:
-      - name: StateId
+      - name: StatusId
         in: path
-        description: ID of State to found
+        description: ID of Status to found
         required: true
         schema:
           type: integer
@@ -164,34 +63,110 @@ paths:
           content:
             application/xml:
               schema:
-                $ref: '#/components/schemas/Article'
+                $ref: '#/components/schemas/Status'
             application/json:
               schema:
-                $ref: '#/components/schemas/Article'
+                $ref: '#/components/schemas/Status'
         400:
-          description: Invalid stateId supplied
+          description: Invalid statusId supplied
         404:
-          description: A state with provided ID was not found
+          description: A status with provided ID was not found
     delete:
       tags:
-      - state
-      summary: Delete a State
-      operationId: deleteState
+      - status
+      summary: Delete a Status
+      operationId: deleteStatus
       parameters:
-      - name: StateId
+      - name: StatusId
         in: path
-        description: State ID to delete
+        description: Status ID to delete
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: state was successfully deleted
+          description: status was successfully deleted
         400:
-          description: Invalid stateId supplied
+          description: Invalid statusId supplied
         404:
-          description: A state with provided ID was not found
+          description: A status with provided ID was not found
+      security:
+      - ApiKeyAuth: []
+  /role:
+    post:
+      tags:
+      - role
+      summary: Add a new role
+      operationId: addRole
+      requestBody:
+        description: Create a new role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        200:
+          description: role was successfully added
+        400:
+          description: role with such name already exists
+        404:
+          description: Body wasn't defined
+          content: {}
+      security:
+      - ApiKeyAuth: []
+      x-codegen-request-body-name: body
+  /role/{RoleId}:
+    get:
+      tags:
+      - role
+      summary: Get role
+      parameters:
+      - name: RoleId
+        in: path
+        description: ID of Role to found
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Role'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        400:
+          description: Invalid roleId supplied
+        404:
+          description: A role with provided ID was not found
+    delete:
+      tags:
+      - role
+      summary: Delete a Role
+      operationId: deleteRole
+      parameters:
+      - name: RoleId
+        in: path
+        description: Role ID to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: role was successfully deleted
+        400:
+          description: Invalid roleId supplied
+        404:
+          description: A role with provided ID was not found
       security:
       - ApiKeyAuth: []
   /article:
@@ -245,7 +220,29 @@ paths:
         404:
           description: A article with provided ID was not found
         400:
-          description: Entered ID does not right 
+          description: Entered ID does not right
+    put:
+      tags:
+      - article
+      summary: Update a Article
+      operationId: updateArticle
+      parameters:
+      - name: ArticleId
+        in: path
+        description: Article ID to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: article was successfully updated
+        400:
+          description: Invalid articleId supplied
+          content: {}
+        404:
+          description: A article with provided ID was not found
+          content: {}
     delete:
       tags:
       - article
@@ -398,143 +395,52 @@ paths:
         404:
           description: User not found
       security:
-      - ApiKeyAuth: [] 
-  /moderator:
-    post:
+      - ApiKeyAuth: []
+    put:
       tags:
-      - moderator
-      summary: Create moderator
-      description: This can only be done by the logged in user.
-      operationId: createModerator
-      requestBody:
-        description: Create a new user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Moderator'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Moderator'
+      - user
+      summary: Update user
+      description: This can only be done by the logged in user
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
         required: true
+        schema:
+          type: string
       responses:
         200:
-          description: successful operation
-          content: {}
+          description: User was successfully deleted
+        400:
+          description: Invalid userID supplied
         404:
-          description: Moderator with such moderatorname already exists
-        400:
-          description: Body wasn't defined right
-      x-codegen-request-body-name: body
-      security:
-      - ApiKeyAuth: []
-  /moderator/login/{ModeratorKey}:
-    get:
-      tags:
-      - moderator
-      summary: Logs moderator into the system
-      operationId: loginModerator
-      parameters:
-      - name: ModeratorKey
-        in: path
-        description: You can login as a moderator only with a key
-        required: true
-        schema:
-          type: string
-      - name: moderatorname
-        in: query
-        description: The moderator name for login
-        required: true
-        schema:
-          type: string
-      - name: password
-        in: query
-        description: The password for login in clear text
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/xml:
-              schema:
-                type: string
-            application/json:
-              schema:
-                type: string
-        400:
-          description: Invalid username/password supplied
-          content: {}
-      security:
-      - ApiKeyAuth: []
-  /moderator/logout/{ModeratorKey}:
-    get:
-      tags:
-      - moderator
-      summary: Logs out current logged in moderator session
-      operationId: logoutModerator
-      parameters:
-      - name: ModeratorKey
-        in: path
-        description: You can logout as a moderator only with a key
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: successful operation
-          content: {}
+          description: User not found
       security:
       - ApiKeyAuth: []
 components:
   schemas:
-    Moderator:
+    Role:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        moderatorname:
+        role:
           type: string
-          example: moder
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: Price
-        email:
-          type: string
-          example: moderator@email.com
-        password:
-          type: string
-          example: somepassword
-        moderatorkey:
-          type: string
-          example: D9YH63Lk3Vx7drr
+          example: moderator
       xml:
-        name: Moderator
-    State:
+        name: Role
+    Status:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        name:
+        status:
           type: string
+          example: moderator
       xml:
-        name: Moderator
+        name: Status
     User:
       type: object
       properties:
@@ -556,41 +462,32 @@ components:
         password:
           type: string
           example: anothersomepassword
-
-      xml:
-        name: User
+        role_id:
+          type: integer
+          format: int64
     Article:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        name:
+        title:
           type: string
           example: Einstein's theory of relativity
-        body:
+        text:
           type: string
           example: Something about the theory of relativity
-        version:
-          type: string
-          example: 0.0.1
-    UpdatedArticle:
-      type: object
-      properties:
-        ArticleId:
+        user_id:
           type: integer
           format: int64
-        UserId:
+        moderator_id:
           type: integer
           format: int64
-        ArticleBody:
-          type: string
         date:
           type: string
-        state:
-          type: string
-      xml:
-        name: Article
+        status_id:
+          type: integer
+          format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

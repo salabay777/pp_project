@@ -1,20 +1,20 @@
 __version__ = '0.1.0'
 from flask import Flask, Response
+from flask_cors import CORS
 from waitress import serve
 
-from moderator import moderator
 from user import user
-from state import state
-# from mod import moderator
+from role import role
+from status import status
 from article import article
-from updatedArticle import updatedArticle
+
 
 app = Flask(__name__)
-app.register_blueprint(state)
-app.register_blueprint(moderator)
 app.register_blueprint(user)
+app.register_blueprint(role)
+app.register_blueprint(status)
 app.register_blueprint(article)
-app.register_blueprint(updatedArticle)
+CORS(app)
 
 
 @app.route('/api/v1/hello-world-5')
@@ -47,4 +47,4 @@ def myendpoint():
 #     session.commit()
 
 #     return Response(response='New audience was successfully created!')
-serve(app, host='0.0.0.0', port=8089, threads=1)
+serve(app, port=8089)
